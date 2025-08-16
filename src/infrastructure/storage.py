@@ -62,7 +62,10 @@ class FileSessionStorage(SessionStorage):
 
         try:
             with open(self.file_path, "r", encoding="utf-8") as file:
-                session_data: dict[str, str] = json.load(file)
+                data = json.load(file)
+                if not isinstance(data, dict):
+                    raise StorageError("Invalid session file format")
+                session_data: dict[str, str] = data
 
             created_at = datetime.fromisoformat(session_data["created_at"])
             expires_at = datetime.fromisoformat(session_data["expires_at"])

@@ -1,9 +1,10 @@
 import json
 import unittest
+import unittest.mock
 from pathlib import Path
 
 from src.domain.exceptions import StorageError
-from src.domain.models import Session, SessionStatus
+from src.domain.models import Session
 from src.infrastructure.storage import FileSessionStorage, SessionStorage
 from tests.utils.test_helpers import BaseTestCase, TestDataFactory, TempFileHelper
 
@@ -14,18 +15,24 @@ class TestSessionStorageInterface(unittest.TestCase):
     def test_session_storage_is_abstract(self):
         """Test that SessionStorage cannot be instantiated directly."""
         with self.assertRaises(TypeError):
-            SessionStorage()
+            SessionStorage()  # type: ignore
 
 
 class TestFileSessionStorage(BaseTestCase):
 
-    def setUp(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.temp_file_path: Path
+        self.storage: FileSessionStorage
+        self.test_session: Session
+
+    def setUp(self) -> None:
         super().setUp()
         self.temp_file_path = TempFileHelper.create_temp_file_path()
         self.storage = FileSessionStorage(self.temp_file_path)
         self.test_session = TestDataFactory.create_active_session()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         """Clean up temporary files after each test."""
         if self.temp_file_path.exists():
             self.temp_file_path.unlink()
@@ -57,12 +64,16 @@ class TestFileSessionStorage(BaseTestCase):
         
         # Verify only second session is stored
         loaded_session = self.storage.load()
+        self.assertIsNotNone(loaded_session)
+        assert loaded_session is not None  # For type checker
         self.assertEqual(loaded_session.created_at, second_session.created_at)
         self.assertEqual(loaded_session.expires_at, second_session.expires_at)
 
     def test_save_raises_storage_error_on_file_permission_error(self):
         # Mock the open function to raise a permission error
-        with unittest.mock.patch('builtins.open', side_effect=PermissionError("Permission denied")):
+        with unittest.mock.patch(
+            'builtins.open', side_effect=PermissionError("Permission denied")
+        ):
             with self.assertRaises(StorageError) as context:
                 self.storage.save(self.test_session)
             
@@ -74,6 +85,8 @@ class TestFileSessionStorage(BaseTestCase):
         loaded_session = self.storage.load()
         
         # Note: loaded session status may be recalculated based on current time
+        self.assertIsNotNone(loaded_session)
+        assert loaded_session is not None  # For type checker
         self.assertEqual(loaded_session.created_at, self.test_session.created_at)
         self.assertEqual(loaded_session.expires_at, self.test_session.expires_at)
 
@@ -91,6 +104,8 @@ class TestFileSessionStorage(BaseTestCase):
         loaded_session = self.storage.load()
         
         # Verify the timestamps are preserved but status is recalculated
+        self.assertIsNotNone(loaded_session)
+        assert loaded_session is not None  # For type checker
         self.assertEqual(loaded_session.created_at, expired_session.created_at)
         self.assertEqual(loaded_session.expires_at, expired_session.expires_at)
         # Status should be recalculated by Session.from_data()
@@ -157,7 +172,9 @@ class TestFileSessionStorage(BaseTestCase):
         self.storage.save(self.test_session)
         
         # Mock the Path.unlink method to raise OSError
-        with unittest.mock.patch('pathlib.Path.unlink', side_effect=OSError("Permission denied")):
+        with unittest.mock.patch(
+            'pathlib.Path.unlink', side_effect=OSError("Permission denied")
+        ):
             with self.assertRaises(StorageError) as context:
                 self.storage.delete()
             
@@ -177,6 +194,8 @@ class TestFileSessionStorage(BaseTestCase):
         
         # Should be able to load back without issues
         loaded_session = self.storage.load()
+        self.assertIsNotNone(loaded_session)
+        assert loaded_session is not None  # For type checker
         self.assertEqual(loaded_session.created_at, self.test_session.created_at)
         self.assertEqual(loaded_session.expires_at, self.test_session.expires_at)
 
@@ -192,6 +211,9 @@ class TestFileSessionStorage(BaseTestCase):
         session1 = self.storage.load()
         session2 = another_storage.load()
         
+        self.assertIsNotNone(session1)
+        self.assertIsNotNone(session2)
+        assert session1 is not None and session2 is not None  # For type checker
         self.assert_session_equal(session1, session2)
 
 

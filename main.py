@@ -4,7 +4,9 @@ from src.domain.exceptions import SessionManagerError, SessionNotFoundError
 from src.infrastructure.claude_client import create_claude_client
 from src.infrastructure.storage import create_file_storage
 from src.services.session_manager import SessionManager
-from src.utils.formatters import format_session_info, format_success_message, format_error_message
+from src.utils.formatters import (
+    format_session_info, format_success_message, format_error_message
+)
 
 
 def main() -> None:
@@ -20,9 +22,9 @@ def main() -> None:
         session_manager = SessionManager(storage, claude_client, settings)
         
         # Route to appropriate command
-        command = args.command
+        command: str | None = args.command
         if command == 'start-now':
-            force: bool = getattr(args, 'force', False)
+            force = getattr(args, 'force', False)
             handle_start_now(session_manager, force)
         elif command == 'status':
             handle_status(session_manager)
@@ -80,7 +82,10 @@ def handle_status(session_manager: SessionManager) -> None:
         session = session_manager.get_session_info()
         print(format_session_info(session))
     except SessionNotFoundError:
-        print("Nu există o sesiune activă. Folosește 'start-now' pentru a porni o sesiune nouă.")
+        print(
+            "Nu există o sesiune activă. Folosește 'start-now' "
+            "pentru a porni o sesiune nouă."
+        )
 
 
 if __name__ == "__main__":

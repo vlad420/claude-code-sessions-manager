@@ -5,6 +5,7 @@ Test runner for the Claude Sessions Manager.
 This script runs all tests using Python's built-in unittest framework.
 """
 
+import argparse
 import sys
 import unittest
 from pathlib import Path
@@ -120,9 +121,8 @@ def run_specific_test_module(module_name: str, verbosity: int = 2) -> bool:
         return False
 
 
-def main():
+def main() -> None:
     """Main entry point for the test runner."""
-    import argparse
     
     parser = argparse.ArgumentParser(
         description="Run tests for Claude Sessions Manager",
@@ -136,7 +136,7 @@ Examples:
         """
     )
     
-    parser.add_argument(
+    _ = parser.add_argument(
         "-v", "--verbosity",
         type=int,
         choices=[0, 1, 2],
@@ -144,13 +144,13 @@ Examples:
         help="Test output verbosity (0=quiet, 1=normal, 2=verbose)"
     )
     
-    parser.add_argument(
+    _ = parser.add_argument(
         "-m", "--module",
         type=str,
         help="Run tests from specific module (e.g., 'domain.test_models')"
     )
     
-    parser.add_argument(
+    _ = parser.add_argument(
         "-q", "--quiet",
         action="store_const",
         const=0,
@@ -161,10 +161,12 @@ Examples:
     args = parser.parse_args()
     
     # Run tests
-    if args.module:
-        success = run_specific_test_module(args.module, args.verbosity)
+    module: str | None = args.module
+    verbosity: int = args.verbosity
+    if module:
+        success = run_specific_test_module(module, verbosity)
     else:
-        success = discover_and_run_tests(args.verbosity)
+        success = discover_and_run_tests(verbosity)
     
     # Exit with appropriate code
     sys.exit(0 if success else 1)

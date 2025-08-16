@@ -2,7 +2,10 @@ import tempfile
 import unittest.mock
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    pass
 
 from src.config.settings import Settings
 from src.domain.models import Session, SessionStatus
@@ -44,7 +47,7 @@ class TestDataFactory:
         )
 
     @staticmethod
-    def create_test_settings(**overrides) -> Settings:
+    def create_test_settings(**overrides: int | str) -> Settings:
         """Create test settings with optional overrides."""
         defaults = {
             "session_duration_hours": 5,
@@ -54,10 +57,16 @@ class TestDataFactory:
             "output_format": "json",
         }
         defaults.update(overrides)
-        return Settings(**defaults)
+        return Settings(
+            session_duration_hours=int(defaults["session_duration_hours"]),
+            session_file_path=str(defaults["session_file_path"]),
+            claude_timeout_seconds=int(defaults["claude_timeout_seconds"]),
+            max_turns=int(defaults["max_turns"]),
+            output_format=str(defaults["output_format"])
+        )
 
     @staticmethod
-    def create_claude_response(content: str = "Hello!", is_error: bool = False) -> Dict[str, Any]:
+    def create_claude_response(content: str = "Hello!", is_error: bool = False) -> dict[str, str | bool | int | dict[str, int]]:
         """Create a mock Claude CLI response."""
         return {
             "result": content,
@@ -70,7 +79,9 @@ class MockHelper:
     """Helper for creating common mocks."""
 
     @staticmethod
-    def mock_claude_client(response_data: Dict[str, Any] = None) -> unittest.mock.Mock:
+    def mock_claude_client(
+        response_data: dict[str, str | bool | int | dict[str, int]] | None = None
+    ) -> unittest.mock.Mock:
         """Create a mocked Claude client."""
         mock_client = unittest.mock.Mock(spec=ClaudeClient)
         mock_client.test_connection.return_value = True
@@ -82,7 +93,7 @@ class MockHelper:
         return mock_client
 
     @staticmethod
-    def mock_storage(session: Session = None) -> unittest.mock.Mock:
+    def mock_storage(session: Session | None = None) -> unittest.mock.Mock:
         """Create a mocked storage."""
         mock_storage = unittest.mock.Mock(spec=FileSessionStorage)
         mock_storage.load.return_value = session
@@ -90,7 +101,7 @@ class MockHelper:
         return mock_storage
 
     @staticmethod
-    def mock_datetime_now(fixed_time: datetime = None) -> unittest.mock.patch:
+    def mock_datetime_now(fixed_time: datetime | None = None):
         """Create a context manager that mocks datetime.now()."""
         if fixed_time is None:
             fixed_time = TestDataFactory.create_datetime()
@@ -104,7 +115,7 @@ class TempFileHelper:
     """Helper for working with temporary files in tests."""
 
     @staticmethod
-    def create_temp_dir() -> tempfile.TemporaryDirectory:
+    def create_temp_dir() -> tempfile.TemporaryDirectory[str]:
         """Create a temporary directory for test files."""
         return tempfile.TemporaryDirectory()
 
@@ -120,8 +131,17 @@ class TempFileHelper:
 
 class BaseTestCase(unittest.TestCase):
     """Base test case with common setup and utilities."""
+    
+    def __init__(self, *args: str, **kwargs: str) -> None:
+        super().__init__(*args, **kwargs)
+        self.test_data: TestDataFactory
+        self.mock_helper: MockHelper
+        self.temp_helper: TempFileHelper
+        self.now: datetime
+        self.past_time: datetime
+        self.future_time: datetime
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up common test fixtures."""
         self.test_data = TestDataFactory()
         self.mock_helper = MockHelper()

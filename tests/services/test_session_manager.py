@@ -2,15 +2,23 @@ import unittest
 import unittest.mock
 from datetime import datetime, timedelta
 
+from src.config.settings import Settings
 from src.domain.exceptions import SessionNotFoundError, ClaudeClientError
-from src.domain.models import Session, SessionStatus
+from src.domain.models import SessionStatus
 from src.services.session_manager import SessionManager
 from tests.utils.test_helpers import BaseTestCase, TestDataFactory, MockHelper
 
 
 class TestSessionManager(BaseTestCase):
 
-    def setUp(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.settings: Settings
+        self.mock_storage: unittest.mock.Mock
+        self.mock_claude_client: unittest.mock.Mock
+        self.session_manager: SessionManager
+
+    def setUp(self) -> None:
         super().setUp()
         self.settings = TestDataFactory.create_test_settings()
         self.mock_storage = MockHelper.mock_storage()
@@ -22,18 +30,24 @@ class TestSessionManager(BaseTestCase):
         )
 
     def test_activate_session_success(self):
-        with unittest.mock.patch('src.services.session_manager.datetime') as mock_datetime:
+        with unittest.mock.patch(
+            'src.services.session_manager.datetime'
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
             
             session = self.session_manager.activate_session()
             
             # Verify Claude client was tested and called
             self.mock_claude_client.test_connection.assert_called_once()
-            self.mock_claude_client.send_message.assert_called_once_with("Hello, Claude!")
+            self.mock_claude_client.send_message.assert_called_once_with(
+                "Hello, Claude!"
+            )
             
             # Verify session creation
             self.assertEqual(session.created_at, self.now)
-            expected_expires = self.now + timedelta(hours=self.settings.session_duration_hours)
+            expected_expires = self.now + timedelta(
+                hours=self.settings.session_duration_hours
+            )
             self.assertEqual(session.expires_at, expected_expires)
             self.assertEqual(session.status, SessionStatus.ACTIVE)
             
@@ -51,7 +65,9 @@ class TestSessionManager(BaseTestCase):
         self.mock_storage.save.assert_not_called()
 
     def test_activate_session_fails_when_claude_message_fails(self):
-        self.mock_claude_client.send_message.side_effect = ClaudeClientError("Connection failed")
+        self.mock_claude_client.send_message.side_effect = ClaudeClientError(
+            "Connection failed"
+        )
         
         with self.assertRaises(ClaudeClientError) as context:
             self.session_manager.activate_session()
@@ -144,7 +160,9 @@ class TestSessionManager(BaseTestCase):
             settings=custom_settings
         )
         
-        with unittest.mock.patch('src.services.session_manager.datetime') as mock_datetime:
+        with unittest.mock.patch(
+            'src.services.session_manager.datetime'
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
             
             session = session_manager.activate_session()
@@ -155,7 +173,10 @@ class TestSessionManager(BaseTestCase):
 
 
 class TestSessionManagerIntegration(unittest.TestCase):
-    """Integration tests for SessionManager with real dependencies but controlled environment."""
+    """
+    Integration tests for SessionManager with real dependencies 
+    but controlled environment.
+    """
 
     def test_activate_and_get_session_flow(self):
         """Test the complete flow of activating and retrieving a session."""
@@ -170,7 +191,9 @@ class TestSessionManagerIntegration(unittest.TestCase):
         )
         
         # Activate session
-        with unittest.mock.patch('src.services.session_manager.datetime') as mock_datetime:
+        with unittest.mock.patch(
+            'src.services.session_manager.datetime'
+        ) as mock_datetime:
             test_time = datetime(2024, 1, 1, 12, 0, 0)
             mock_datetime.now.return_value = test_time
             

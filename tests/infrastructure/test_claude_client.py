@@ -3,14 +3,22 @@ import subprocess
 import unittest
 import unittest.mock
 
+from src.config.settings import Settings
 from src.domain.exceptions import ClaudeClientError
 from src.infrastructure.claude_client import ClaudeClient, create_claude_client
 from tests.utils.test_helpers import BaseTestCase, TestDataFactory
 
 
 class TestClaudeClient(BaseTestCase):
+    settings: Settings
+    client: ClaudeClient
 
-    def setUp(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.settings = TestDataFactory.create_test_settings()
+        self.client = ClaudeClient(self.settings)
+
+    def setUp(self) -> None:
         super().setUp()
         self.settings = TestDataFactory.create_test_settings()
         self.client = ClaudeClient(self.settings)
@@ -77,7 +85,9 @@ class TestClaudeClient(BaseTestCase):
 
     @unittest.mock.patch('subprocess.run')
     def test_send_message_handles_process_error(self, mock_run):
-        mock_run.side_effect = subprocess.CalledProcessError(1, "claude", "Error output")
+        mock_run.side_effect = subprocess.CalledProcessError(
+            1, "claude", "Error output"
+        )
         
         with self.assertRaises(ClaudeClientError) as context:
             self.client.send_message("Hello")
@@ -140,7 +150,9 @@ class TestClaudeClient(BaseTestCase):
         with self.assertRaises(ClaudeClientError) as context:
             self.client.send_message("Hello")
         
-        self.assertIn("Claude returned error: Something went wrong", str(context.exception))
+        self.assertIn(
+            "Claude returned error: Something went wrong", str(context.exception)
+        )
 
     @unittest.mock.patch('subprocess.run')
     def test_verify_response_handles_error_without_result(self, mock_run):
@@ -228,8 +240,15 @@ class TestClaudeClientFactory(unittest.TestCase):
 
 class TestClaudeClientIntegration(BaseTestCase):
     """Integration tests for ClaudeClient behavior patterns."""
+    settings: Settings
+    client: ClaudeClient
 
-    def setUp(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.settings = TestDataFactory.create_test_settings()
+        self.client = ClaudeClient(self.settings)
+
+    def setUp(self) -> None:
         super().setUp()
         self.settings = TestDataFactory.create_test_settings()
         self.client = ClaudeClient(self.settings)

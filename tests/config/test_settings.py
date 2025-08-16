@@ -1,3 +1,4 @@
+import dataclasses
 import os
 import unittest
 import unittest.mock
@@ -22,8 +23,8 @@ class TestSettings(BaseTestCase):
     def test_settings_is_immutable(self):
         settings = Settings.default()
         
-        with self.assertRaises(AttributeError):
-            settings.session_duration_hours = 10
+        with self.assertRaises((AttributeError, dataclasses.FrozenInstanceError)):
+            settings.session_duration_hours = 10  # type: ignore
 
     def test_custom_settings_values(self):
         settings = Settings(
@@ -129,10 +130,14 @@ class TestSettings(BaseTestCase):
 
 
 class TestSettingsFromEnv(unittest.TestCase):
+    original_env: dict[str, str | None]
 
-    def setUp(self):
-        # Store original environment values
+    def __init__(self, *args: str, **kwargs: str) -> None:
+        super().__init__(*args, **kwargs)
         self.original_env = {}
+
+    def setUp(self) -> None:
+        # Store original environment values
         env_vars = [
             "SESSION_DURATION_HOURS",
             "SESSION_FILE_PATH", 
@@ -145,7 +150,7 @@ class TestSettingsFromEnv(unittest.TestCase):
             if var in os.environ:
                 del os.environ[var]
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         # Restore original environment values
         for var, value in self.original_env.items():
             if value is not None:
@@ -216,8 +221,13 @@ class TestSettingsFromEnv(unittest.TestCase):
 
 
 class TestGetSettings(unittest.TestCase):
+    original_env: dict[str, str | None]
 
-    def setUp(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.original_env = {}
+
+    def setUp(self) -> None:
         # Store original environment values
         self.original_env = {}
         env_vars = [
@@ -232,7 +242,7 @@ class TestGetSettings(unittest.TestCase):
             if var in os.environ:
                 del os.environ[var]
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         # Restore original environment values
         for var, value in self.original_env.items():
             if value is not None:

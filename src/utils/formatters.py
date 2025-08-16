@@ -58,17 +58,19 @@ def format_session_info_rich_text(
         return "blue"
 
     # --- calc timp/progres (robust la lipsa expires_at) ---
-    created = getattr(session, "created_at", None)
-    expires = getattr(session, "expires_at", None)
+    created: datetime | None = getattr(session, "created_at", None)
+    expires: datetime | None = getattr(session, "expires_at", None)
     tz = getattr(expires, "tzinfo", None) if expires else None
     now = datetime.now(tz=tz) if tz else datetime.now()
 
-    total = (expires - created).total_seconds() if (expires and created) else 0
-    remaining = (expires - now).total_seconds() if (expires) else 0
+    total_seconds: float = (
+        (expires - created).total_seconds() if (expires and created) else 0
+    )
+    remaining: float = (expires - now).total_seconds() if (expires) else 0
     remaining = max(remaining, 0)
     pct = (
-        int(round(100 * (1 - (remaining / total))))
-        if total > 0
+        int(round(100 * (1 - (remaining / total_seconds))))
+        if total_seconds > 0
         else (0 if remaining > 0 else 100)
     )
     # bară de progres (30 caractere)
@@ -89,10 +91,13 @@ def format_session_info_rich_text(
     status_render = f"[{color}]●[/] {status_name}" if with_color else f"● {status_name}"
     table.add_row("Stare:", status_render)
 
-    if total > 0:
+    if total_seconds > 0:
         prog = f"[{color}]{bar}[/] {pct:>3}%" if with_color else f"{bar} {pct:>3}%"
         table.add_row("Progres:", prog)
-    if total > 0 and remaining > 0 and "ACTIVE" in status_name.upper() and expires:
+    if (
+        total_seconds > 0 and remaining > 0 
+        and "ACTIVE" in status_name.upper() and expires
+    ):
         table.add_row("Timp rămas:", format_duration(expires - now))
 
     panel = Panel(

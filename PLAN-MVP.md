@@ -19,7 +19,7 @@ Un MVP local pe macOS care:
 1. **Activator sesiune (kicker)** — declanșează o nouă sesiune trimițând un mesaj “ping” minim către Claude Code și loghează startul în baza de date locală.
 2. **Status Poller** — interoghează la cerere sau periodic starea ferestrei (ex. “în fereastra curentă”, “aproape de limită”) și salvează instantanee.
 3. **Scheduler** — un LaunchAgent macOS care rulează la interval regulat (ex. 5 minute) și decide dacă trebuie pornită o nouă sesiune (>=5h de la start).
-4. **CLI minimal** — comenzi pentru utilizator: `start-now`, `status`, `log`. (Descriere conceptuală; implementarea efectivă a codului nu este inclusă aici.)
+4. **CLI minimal** — comenzi pentru utilizator: `start-now`, `status`.
 5. **Afișaj rapid (opțional)** — un plugin de tip menubar (ex. SwiftBar) care prezintă starea: `Claude: S#<n> <h:mm> / <h:mm>`.
 
 ## Flux de lucru

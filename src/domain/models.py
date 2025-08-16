@@ -25,7 +25,10 @@ class Session:
 
     @classmethod
     def from_data(cls, created_at: datetime, expires_at: datetime) -> "Session":
-        status = SessionStatus.ACTIVE if expires_at > datetime.now() else SessionStatus.EXPIRED
+        status = (
+            SessionStatus.ACTIVE if expires_at > datetime.now() 
+            else SessionStatus.EXPIRED
+        )
         return cls(
             created_at=created_at,
             expires_at=expires_at,

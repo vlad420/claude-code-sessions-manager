@@ -39,7 +39,9 @@ class ClaudeClient:
             return self._parse_response(result.stdout.strip())
 
         except subprocess.TimeoutExpired as e:
-            raise ClaudeClientError(f"Claude CLI timeout after {self.settings.claude_timeout_seconds}s: {e}")
+            raise ClaudeClientError(
+                f"Claude CLI timeout after {self.settings.claude_timeout_seconds}s: {e}"
+            )
         except subprocess.CalledProcessError as e:
             raise ClaudeClientError(f"Claude CLI error: {e}")
         except Exception as e:
@@ -48,7 +50,10 @@ class ClaudeClient:
     def _parse_response(self, raw_output: str) -> JsonDict:
         """Parse the raw output from Claude CLI."""
         try:
-            response: JsonDict = json.loads(raw_output)
+            response_data = json.loads(raw_output)
+            if not isinstance(response_data, dict):
+                raise ClaudeClientError("Invalid response format from Claude CLI")
+            response: JsonDict = response_data
             self._verify_response(response)
             return response
         except json.JSONDecodeError as e:
@@ -71,7 +76,11 @@ class ClaudeClient:
                 timeout=5,
             )
             return result.returncode == 0
-        except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
+        except (
+            subprocess.TimeoutExpired, 
+            FileNotFoundError, 
+            subprocess.CalledProcessError
+        ):
             return False
 
 
