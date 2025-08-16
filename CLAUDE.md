@@ -23,6 +23,14 @@ ruff format .               # Format code
 basedpyright               # Type checking
 ```
 
+### Testing
+```bash
+python run_tests.py             # Run all tests
+python run_tests.py -v 1        # Run with less verbose output
+python run_tests.py -q          # Run with minimal output
+python run_tests.py -m test_models  # Run specific test module
+```
+
 ### Dependencies
 ```bash
 pip install -r requirements.txt  # Install dependencies (rich for formatting)
