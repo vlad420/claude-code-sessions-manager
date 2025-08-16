@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from claude_code_session_manager.domain.models import Session
+from src.claude_code_session_manager.domain.models import Session
 
 from io import StringIO
 
@@ -95,8 +95,10 @@ def format_session_info_rich_text(
         prog = f"[{color}]{bar}[/] {pct:>3}%" if with_color else f"{bar} {pct:>3}%"
         table.add_row("Progres:", prog)
     if (
-        total_seconds > 0 and remaining > 0 
-        and "ACTIVE" in status_name.upper() and expires
+        total_seconds > 0
+        and remaining > 0
+        and "ACTIVE" in status_name.upper()
+        and expires
     ):
         table.add_row("Timp rămas:", format_duration(expires - now))
 
