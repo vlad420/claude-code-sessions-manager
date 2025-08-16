@@ -9,10 +9,24 @@ This is a Python-based Claude Pro session manager that automates the creation an
 ## Running the Application
 
 ```bash
-python main.py
+python main.py start-now    # Start a new session
+python main.py status       # Check current session status
+python main.py start-now -f # Force start new session (override active session)
 ```
 
-The main entry point activates a new session and displays current session information.
+## Development Commands
+
+### Linting and Type Checking
+```bash
+ruff check .                # Run linting
+ruff format .               # Format code
+basedpyright               # Type checking
+```
+
+### Dependencies
+```bash
+pip install -r requirements.txt  # Install dependencies (rich for formatting)
+```
 
 ## Architecture
 
@@ -52,7 +66,7 @@ Settings are managed through environment variables with defaults:
 
 ## Dependencies
 
-- Python standard library only (no external packages)
+- Python standard library + rich (for terminal formatting)
 - Requires Claude CLI to be installed and available in PATH
 - Uses subprocess to interact with `claude` command
 
@@ -65,4 +79,9 @@ Settings are managed through environment variables with defaults:
 5. Display formatted session information
 
 The system is designed for macOS with plans for LaunchAgent integration for automated scheduling.
-- Dupa orice refactor sau modificare de cod verifica erorile si rezolva-le folosind ruff si basedpyright
+
+## Important Development Notes
+
+- After any refactoring or code changes, verify and fix errors using `ruff` and `basedpyright`
+- The CLI supports Romanian language for user-facing messages
+- Session data is persisted in JSON format for simplicity and readability
