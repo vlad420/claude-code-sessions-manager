@@ -9,7 +9,7 @@ Ai planul Pro care oferă ferestre de 5 ore cu ~45 de mesaje. Vrei să optimizez
 Un MVP local pe macOS care:
 
 - pornește automat o nouă sesiune la fiecare 5 ore sau la comandă;
-- păstrează un istoric al sesiunilor (număr, început, sfârșit, durată, notițe);
+- păstrează local salvata sesiunea (început, sfârșit, durată);
 - afișează timpul scurs în format **h:mm** și timpul estimat până la reset;
 - oferă un status rapid privind “fereastra” curentă și apropierea de limită;
 - rulează 100% local, fără a depinde de UI-ul aplicației desktop.
@@ -26,12 +26,12 @@ Un MVP local pe macOS care:
 
 - La prima utilizare te autentifici în Claude Code și pornești manual o sesiune (“aliniere” a ferestrei cu programul tău).
 - Scheduler-ul verifică periodic: dacă nu există sesiune activă sau au trecut 5 ore, pornește automat următoarea.
-- Poți declanșa oricând manual o nouă sesiune pentru a realinia fereastra înainte de un sprint.
-- Statusul curent este disponibil instant (număr sesiune, timp scurs, timp rămas).
+- Poți declanșa oricând manual o nouă sesiune pentru a realinia fereastra in caz de desincronizare.
+- Statusul curent este disponibil instant (pornita, expira, stare, progres(timp scurs), timp rămas).
 
 ## Date și metrici urmărite
 
-- **sessions**: id sesiune, start, end (opțional), durată, notă.
+- **sessions**: id sesiune, start, expirare, durată.
 
 ## Funcționalități cheie în MVP
 
@@ -47,29 +47,24 @@ Un MVP local pe macOS care:
 ## Strategia de optimizare
 
 1. **Aliniere**: pornești prima sesiune la ora la care vrei să devină “ritmul” de 5h (ex. 08:00).
-2. **Cadentă**: la fiecare ~5h se creează automat o sesiune nouă; când ai un sprint important, o pornești manual chiar înainte.
-3. **Monitorizare**: urmărești h:mm scurs și istoricul pentru a identifica intervalele în care valorifici cel mai bine fereastra.
-4. **Ajustări**: dacă sesiunile tind să “cadă” în ore nepotrivite, folosește `start-now` pentru a realinia ciclul.
+2. **Cadentă**: la fiecare ~5h se creează automat o sesiune nouă; Daca nu se executa automat dintr-un motiv anume o pornești manual.
+3. **Monitorizare**: urmărești h:mm scurs pentru a valorifica cel mai bine fereastra.
 
 ## Extensii după MVP
 
-- **v1.1**: export CSV al sesiunilor (număr, start, end, durată, mesaje estimate).
-- **v1.2**: dashboard web local (FastAPI) cu grafic al sesiunilor și al utilizării.
 - **v2**: integrare OpenTelemetry → Prometheus/Grafana sau servicii managed pentru alerte și vizualizări.
-- **v2.1**: fallback pentru trimiterea “ping”-ului via AppleScript către aplicația desktop (doar dacă e necesar, UI-dependent).
 
 ## Considerații & limite
 
 - Scopul este **programarea inteligentă** a ferestrelor, nu ocolirea limitelor.
 - Mesajele “ping” consumă minim din bugetul de mesaje, dar contează în fereastră.
 - Automatizarea prin CLI este mai robustă decât scripting de UI; aplicația desktop rămâne opțională.
-- Păstrează log-uri locale și respectă politica de utilizare a serviciului.
+- Respectă politica de utilizare a serviciului.
 
-## Pași concreți de început (fără cod)
+## Pași concreți de început
 
 1. **Instalare și autentificare** în Claude Code pe macOS (o singură dată).
-2. **Inițializare date locale**: creezi un fișier/bază de date simplă pentru sesiuni (ex. SQLite sau CSV).
-3. **Configurare scheduler**: setezi un LaunchAgent macOS care rulează periodic un script “tick” (verifică dacă au trecut 5h; dacă da, pornește o nouă sesiune și loghează).
-4. **Comenzi utilizator**: definești trei acțiuni – „pornește acum”, „status”, „istoric” – accesibile din terminal.
-5. **(Opțional) Menubar**: instalezi un utilitar de tip SwiftBar/BitBar și adaugi un plugin minimal care citește statusul.
-6. **Test & ajustare**: pornești manual prima sesiune, verifici că după 5h se creează automat următoarea, rafinezi mesajul „ping” și frecvența verificării.
+2. **Configurare scheduler**: setezi un LaunchAgent macOS care rulează periodic un script “tick” (verifică dacă au trecut 5h; dacă da, pornește o nouă sesiune și loghează).
+3. **Comenzi utilizator**: definești doua acțiuni – „pornește acum”, „status” – accesibile din terminal.
+4. **(Opțional) Menubar**: instalezi un utilitar de tip SwiftBar/BitBar și adaugi un plugin minimal care citește statusul.
+5. **Test & ajustare**: pornești manual prima sesiune, verifici că după 5h se creează automat următoarea, rafinezi mesajul „ping” și frecvența verificării.
