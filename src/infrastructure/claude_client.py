@@ -1,9 +1,11 @@
 import json
 import subprocess
-from typing import Any
 
 from ..config.settings import Settings
 from ..domain.exceptions import ClaudeClientError
+
+# Type alias for JSON response
+JsonDict = dict[str, str | bool | int | float | None]
 
 
 class ClaudeClient:
@@ -12,7 +14,7 @@ class ClaudeClient:
     def __init__(self, settings: Settings):
         self.settings: Settings = settings
 
-    def send_message(self, message: str) -> dict[str, Any]:
+    def send_message(self, message: str) -> JsonDict:
         """Send a message to Claude CLI and return the response."""
         cmd = [
             "claude",
@@ -43,20 +45,17 @@ class ClaudeClient:
         except Exception as e:
             raise ClaudeClientError(f"Unexpected error calling Claude CLI: {e}")
 
-    def _parse_response(self, raw_output: str) -> dict[str, Any]:
+    def _parse_response(self, raw_output: str) -> JsonDict:
         """Parse the raw output from Claude CLI."""
         try:
-            response = json.loads(raw_output)
+            response: JsonDict = json.loads(raw_output)
             self._verify_response(response)
             return response
         except json.JSONDecodeError as e:
             raise ClaudeClientError(f"Invalid JSON response from Claude CLI: {e}")
 
-    def _verify_response(self, response: dict[str, Any]) -> None:
+    def _verify_response(self, response: JsonDict) -> None:
         """Verify that the Claude response is valid."""
-        if not isinstance(response, dict):
-            raise ClaudeClientError("Response is not a valid JSON object")
-        
         if response.get("is_error", False):
             error_message = response.get("result", "Unknown error")
             raise ClaudeClientError(f"Claude returned error: {error_message}")

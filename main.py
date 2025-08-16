@@ -20,7 +20,7 @@ def main() -> None:
         session_manager = SessionManager(storage, claude_client, settings)
         
         # Route to appropriate command
-        command: str = args.command
+        command = args.command
         if command == 'start-now':
             force: bool = getattr(args, 'force', False)
             handle_start_now(session_manager, force)

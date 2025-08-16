@@ -62,7 +62,7 @@ class FileSessionStorage(SessionStorage):
 
         try:
             with open(self.file_path, "r", encoding="utf-8") as file:
-                session_data = json.load(file)
+                session_data: dict[str, str] = json.load(file)
 
             created_at = datetime.fromisoformat(session_data["created_at"])
             expires_at = datetime.fromisoformat(session_data["expires_at"])
