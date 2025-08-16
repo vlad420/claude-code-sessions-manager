@@ -90,6 +90,6 @@ The system is designed for macOS with plans for LaunchAgent integration for auto
 
 ## Important Development Notes
 
-- After any refactoring or code changes, verify and fix errors using `ruff` and `basedpyright`
+- After any refactoring or code changes, verify and fix errors using `ruff` and `basedpyright`, then run `python run_tests.py` to verify tests
 - The CLI supports Romanian language for user-facing messages
 - Session data is persisted in JSON format for simplicity and readability
