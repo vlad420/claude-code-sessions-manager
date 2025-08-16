@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..domain.exceptions import ConfigurationError
+from src.claude_code_session_manager.domain.exceptions import ConfigurationError
 
 
 @dataclass(frozen=True)
@@ -40,13 +40,13 @@ class Settings:
         """Validate the configuration settings."""
         if self.session_duration_hours <= 0:
             raise ConfigurationError("Session duration must be positive")
-        
+
         if self.claude_timeout_seconds <= 0:
             raise ConfigurationError("Claude timeout must be positive")
-        
+
         if self.max_turns <= 0:
             raise ConfigurationError("Max turns must be positive")
-        
+
         if self.output_format not in ["json", "text"]:
             raise ConfigurationError("Output format must be 'json' or 'text'")
 
@@ -56,3 +56,4 @@ def get_settings() -> Settings:
     settings = Settings.from_env()
     settings.validate()
     return settings
+

@@ -1,8 +1,8 @@
 import json
 import subprocess
 
-from ..config.settings import Settings
-from ..domain.exceptions import ClaudeClientError
+from src.claude_code_session_manager.config.settings import Settings
+from src.claude_code_session_manager.domain.exceptions import ClaudeClientError
 
 # Type alias for JSON response
 JsonDict = dict[str, str | bool | int | float | None]
@@ -18,9 +18,12 @@ class ClaudeClient:
         """Send a message to Claude CLI and return the response."""
         cmd = [
             "claude",
-            "-p", message,
-            "--max-turns", str(self.settings.max_turns),
-            "--output-format", self.settings.output_format,
+            "-p",
+            message,
+            "--max-turns",
+            str(self.settings.max_turns),
+            "--output-format",
+            self.settings.output_format,
         ]
 
         try:
@@ -32,7 +35,7 @@ class ClaudeClient:
                 encoding="utf-8",
                 timeout=self.settings.claude_timeout_seconds,
             )
-            
+
             if not result.stdout.strip():
                 raise ClaudeClientError("Empty response from Claude CLI")
 
@@ -77,9 +80,9 @@ class ClaudeClient:
             )
             return result.returncode == 0
         except (
-            subprocess.TimeoutExpired, 
-            FileNotFoundError, 
-            subprocess.CalledProcessError
+            subprocess.TimeoutExpired,
+            FileNotFoundError,
+            subprocess.CalledProcessError,
         ):
             return False
 
@@ -87,3 +90,4 @@ class ClaudeClient:
 def create_claude_client(settings: Settings) -> ClaudeClient:
     """Factory function to create Claude client."""
     return ClaudeClient(settings)
+

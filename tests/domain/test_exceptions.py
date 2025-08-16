@@ -1,6 +1,6 @@
 import unittest
 
-from src.domain.exceptions import (
+from src.claude_code_session_manager.domain.exceptions import (
     SessionManagerError,
     SessionNotFoundError,
     SessionExpiredError,
@@ -11,7 +11,6 @@ from src.domain.exceptions import (
 
 
 class TestExceptions(unittest.TestCase):
-
     def test_session_manager_error_is_base_exception(self):
         exception = SessionManagerError("test message")
         self.assertIsInstance(exception, Exception)
@@ -50,7 +49,7 @@ class TestExceptions(unittest.TestCase):
     def test_exceptions_can_be_raised_and_caught(self):
         with self.assertRaises(SessionNotFoundError) as context:
             raise SessionNotFoundError("test session not found")
-        
+
         self.assertEqual(str(context.exception), "test session not found")
 
     def test_specific_exceptions_can_be_caught_as_base_exception(self):
@@ -64,5 +63,6 @@ class TestExceptions(unittest.TestCase):
             raise ClaudeClientError("client error")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
+

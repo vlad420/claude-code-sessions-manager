@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
 
-from ..config.settings import Settings
-from ..domain.exceptions import (
+from src.claude_code_session_manager.config.settings import Settings
+from src.claude_code_session_manager.domain.exceptions import (
     SessionNotFoundError,
     ClaudeClientError,
 )
-from ..domain.models import Session
-from ..infrastructure.claude_client import ClaudeClient
-from ..infrastructure.storage import SessionStorage
+from src.claude_code_session_manager.domain.models import Session
+from src.claude_code_session_manager.infrastructure.claude_client import ClaudeClient
+from src.claude_code_session_manager.infrastructure.storage import SessionStorage
 
 
 class SessionManager:

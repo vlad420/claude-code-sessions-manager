@@ -1,10 +1,10 @@
 import argparse
-from src.config.settings import get_settings
-from src.domain.exceptions import SessionManagerError, SessionNotFoundError
-from src.infrastructure.claude_client import create_claude_client
-from src.infrastructure.storage import create_file_storage
-from src.services.session_manager import SessionManager
-from src.utils.formatters import (
+from claude_code_session_manager.config.settings import get_settings
+from claude_code_session_manager.domain.exceptions import SessionManagerError, SessionNotFoundError
+from claude_code_session_manager.infrastructure.claude_client import create_claude_client
+from claude_code_session_manager.infrastructure.storage import create_file_storage
+from claude_code_session_manager.services.session_manager import SessionManager
+from claude_code_session_manager.utils.formatters import (
     format_session_info, format_success_message, format_error_message
 )
 

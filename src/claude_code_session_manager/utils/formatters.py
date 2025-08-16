@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from ..domain.models import Session
+from claude_code_session_manager.domain.models import Session
 
 from io import StringIO
 

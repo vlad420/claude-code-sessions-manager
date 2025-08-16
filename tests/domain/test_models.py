@@ -2,7 +2,7 @@ import unittest
 import unittest.mock
 from datetime import datetime, timedelta
 
-from src.domain.models import Session, SessionStatus
+from src.claude_code_session_manager.domain.models import Session, SessionStatus
 
 
 class TestSession(unittest.TestCase):
@@ -31,7 +31,9 @@ class TestSession(unittest.TestCase):
         self.assertEqual(session.status, SessionStatus.ACTIVE)
 
     def test_from_data_creates_active_session_when_not_expired(self):
-        with unittest.mock.patch("src.domain.models.datetime") as mock_datetime:
+        with unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime"
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
 
             session = Session.from_data(
@@ -41,7 +43,9 @@ class TestSession(unittest.TestCase):
             self.assertEqual(session.status, SessionStatus.ACTIVE)
 
     def test_from_data_creates_expired_session_when_expired(self):
-        with unittest.mock.patch("src.domain.models.datetime") as mock_datetime:
+        with unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime"
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
 
             session = Session.from_data(
@@ -52,7 +56,9 @@ class TestSession(unittest.TestCase):
             self.assertEqual(session.status, SessionStatus.EXPIRED)
 
     def test_is_active_returns_true_for_active_non_expired_session(self):
-        with unittest.mock.patch("src.domain.models.datetime") as mock_datetime:
+        with unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime"
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
 
             session = Session(
@@ -64,7 +70,9 @@ class TestSession(unittest.TestCase):
             self.assertTrue(session.is_active)
 
     def test_is_active_returns_false_for_expired_session(self):
-        with unittest.mock.patch("src.domain.models.datetime") as mock_datetime:
+        with unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime"
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
 
             session = Session(
@@ -76,7 +84,9 @@ class TestSession(unittest.TestCase):
             self.assertFalse(session.is_active)
 
     def test_is_active_returns_false_for_expired_status(self):
-        with unittest.mock.patch("src.domain.models.datetime") as mock_datetime:
+        with unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime"
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
 
             session = Session(
@@ -88,7 +98,9 @@ class TestSession(unittest.TestCase):
             self.assertFalse(session.is_active)
 
     def test_is_expired_returns_true_when_session_not_active(self):
-        with unittest.mock.patch("src.domain.models.datetime") as mock_datetime:
+        with unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime"
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
 
             session = Session(
@@ -100,7 +112,9 @@ class TestSession(unittest.TestCase):
             self.assertTrue(session.is_expired)
 
     def test_is_expired_returns_false_when_session_active(self):
-        with unittest.mock.patch("src.domain.models.datetime") as mock_datetime:
+        with unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime"
+        ) as mock_datetime:
             mock_datetime.now.return_value = self.now
 
             session = Session(
@@ -132,4 +146,3 @@ class TestSessionStatus(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

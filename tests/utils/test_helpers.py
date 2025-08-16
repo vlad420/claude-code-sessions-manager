@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     pass
 
-from src.config.settings import Settings
-from src.domain.models import Session, SessionStatus
-from src.infrastructure.claude_client import ClaudeClient
-from src.infrastructure.storage import FileSessionStorage
+from src.claude_code_session_manager.config.settings import Settings
+from src.claude_code_session_manager.domain.models import Session, SessionStatus
+from src.claude_code_session_manager.infrastructure.claude_client import ClaudeClient
+from src.claude_code_session_manager.infrastructure.storage import FileSessionStorage
 
 
 class TestDataFactory:
@@ -24,8 +24,7 @@ class TestDataFactory:
 
     @staticmethod
     def create_active_session(
-        created_hours_ago: int = 1,
-        expires_hours_from_now: int = 4
+        created_hours_ago: int = 1, expires_hours_from_now: int = 4
     ) -> Session:
         """Create an active session with specified timing."""
         created_at = TestDataFactory.create_datetime(-created_hours_ago)
@@ -34,16 +33,13 @@ class TestDataFactory:
 
     @staticmethod
     def create_expired_session(
-        created_hours_ago: int = 6,
-        expired_hours_ago: int = 1
+        created_hours_ago: int = 6, expired_hours_ago: int = 1
     ) -> Session:
         """Create an expired session with specified timing."""
         created_at = TestDataFactory.create_datetime(-created_hours_ago)
         expires_at = TestDataFactory.create_datetime(-expired_hours_ago)
         return Session(
-            created_at=created_at,
-            expires_at=expires_at,
-            status=SessionStatus.EXPIRED
+            created_at=created_at, expires_at=expires_at, status=SessionStatus.EXPIRED
         )
 
     @staticmethod
@@ -62,17 +58,15 @@ class TestDataFactory:
             session_file_path=str(defaults["session_file_path"]),
             claude_timeout_seconds=int(defaults["claude_timeout_seconds"]),
             max_turns=int(defaults["max_turns"]),
-            output_format=str(defaults["output_format"])
+            output_format=str(defaults["output_format"]),
         )
 
     @staticmethod
-    def create_claude_response(content: str = "Hello!", is_error: bool = False) -> dict[str, str | bool | int | dict[str, int]]:
+    def create_claude_response(
+        content: str = "Hello!", is_error: bool = False
+    ) -> dict[str, str | bool | int | dict[str, int]]:
         """Create a mock Claude CLI response."""
-        return {
-            "result": content,
-            "is_error": is_error,
-            "usage": {"tokens": 10}
-        }
+        return {"result": content, "is_error": is_error, "usage": {"tokens": 10}}
 
 
 class MockHelper:
@@ -80,15 +74,15 @@ class MockHelper:
 
     @staticmethod
     def mock_claude_client(
-        response_data: dict[str, str | bool | int | dict[str, int]] | None = None
+        response_data: dict[str, str | bool | int | dict[str, int]] | None = None,
     ) -> unittest.mock.Mock:
         """Create a mocked Claude client."""
         mock_client = unittest.mock.Mock(spec=ClaudeClient)
         mock_client.test_connection.return_value = True
-        
+
         if response_data is None:
             response_data = TestDataFactory.create_claude_response()
-        
+
         mock_client.send_message.return_value = response_data
         return mock_client
 
@@ -105,10 +99,12 @@ class MockHelper:
         """Create a context manager that mocks datetime.now()."""
         if fixed_time is None:
             fixed_time = TestDataFactory.create_datetime()
-        
+
         mock_datetime = unittest.mock.Mock()
         mock_datetime.now.return_value = fixed_time
-        return unittest.mock.patch('src.domain.models.datetime', mock_datetime)
+        return unittest.mock.patch(
+            "src.claude_code_session_manager.domain.models.datetime", mock_datetime
+        )
 
 
 class TempFileHelper:
@@ -131,7 +127,7 @@ class TempFileHelper:
 
 class BaseTestCase(unittest.TestCase):
     """Base test case with common setup and utilities."""
-    
+
     def __init__(self, *args: str, **kwargs: str) -> None:
         super().__init__(*args, **kwargs)
         self.test_data: TestDataFactory
@@ -146,7 +142,7 @@ class BaseTestCase(unittest.TestCase):
         self.test_data = TestDataFactory()
         self.mock_helper = MockHelper()
         self.temp_helper = TempFileHelper()
-        
+
         # Common test times
         self.now = TestDataFactory.create_datetime()
         self.past_time = TestDataFactory.create_datetime(-1)
@@ -157,3 +153,4 @@ class BaseTestCase(unittest.TestCase):
         self.assertEqual(session1.created_at, session2.created_at)
         self.assertEqual(session1.expires_at, session2.expires_at)
         self.assertEqual(session1.status, session2.status)
+
