@@ -4,7 +4,7 @@ import unittest
 import unittest.mock
 from pathlib import Path
 
-from src.claude_code_session_manager.config.settings import Settings, get_settings
+from src.claude_code_session_manager.config.settings import Settings, get_settings, get_default_session_file_path
 from src.claude_code_session_manager.domain.exceptions import ConfigurationError
 from tests.utils.test_helpers import BaseTestCase
 
@@ -14,7 +14,7 @@ class TestSettings(BaseTestCase):
         settings = Settings.default()
 
         self.assertEqual(settings.session_duration_hours, 5)
-        self.assertEqual(settings.session_file_path, "session.json")
+        self.assertEqual(settings.session_file_path, get_default_session_file_path())
         self.assertEqual(settings.claude_timeout_seconds, 10)
         self.assertEqual(settings.max_turns, 1)
         self.assertEqual(settings.output_format, "json")
@@ -161,7 +161,7 @@ class TestSettingsFromEnv(unittest.TestCase):
         settings = Settings.from_env()
 
         self.assertEqual(settings.session_duration_hours, 5)
-        self.assertEqual(settings.session_file_path, "session.json")
+        self.assertEqual(settings.session_file_path, get_default_session_file_path())
         self.assertEqual(settings.claude_timeout_seconds, 10)
         self.assertEqual(settings.max_turns, 1)
         self.assertEqual(settings.output_format, "json")
@@ -189,7 +189,7 @@ class TestSettingsFromEnv(unittest.TestCase):
         settings = Settings.from_env()
 
         self.assertEqual(settings.session_duration_hours, 10)
-        self.assertEqual(settings.session_file_path, "session.json")  # default
+        self.assertEqual(settings.session_file_path, get_default_session_file_path())  # default
         self.assertEqual(settings.claude_timeout_seconds, 10)  # default
         self.assertEqual(settings.max_turns, 1)  # default
         self.assertEqual(settings.output_format, "text")

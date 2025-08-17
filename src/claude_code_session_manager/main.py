@@ -1,19 +1,46 @@
 import argparse
-from src.claude_code_session_manager.config.settings import get_settings
-from src.claude_code_session_manager.domain.exceptions import (
-    SessionManagerError,
-    SessionNotFoundError,
-)
-from src.claude_code_session_manager.infrastructure.claude_client import (
-    create_claude_client,
-)
-from src.claude_code_session_manager.infrastructure.storage import create_file_storage
-from src.claude_code_session_manager.services.session_manager import SessionManager
-from src.claude_code_session_manager.utils.formatters import (
-    format_session_info,
-    format_success_message,
-    format_error_message,
-)
+try:
+    from claude_code_session_manager.config.settings import get_settings
+except ImportError:
+    from src.claude_code_session_manager.config.settings import get_settings
+try:
+    from claude_code_session_manager.domain.exceptions import (
+        SessionManagerError,
+        SessionNotFoundError,
+    )
+except ImportError:
+    from src.claude_code_session_manager.domain.exceptions import (
+        SessionManagerError,
+        SessionNotFoundError,
+    )
+try:
+    from claude_code_session_manager.infrastructure.claude_client import (
+        create_claude_client,
+    )
+except ImportError:
+    from src.claude_code_session_manager.infrastructure.claude_client import (
+        create_claude_client,
+    )
+try:
+    from claude_code_session_manager.infrastructure.storage import create_file_storage
+except ImportError:
+    from src.claude_code_session_manager.infrastructure.storage import create_file_storage
+try:
+    from claude_code_session_manager.services.session_manager import SessionManager
+except ImportError:
+    from src.claude_code_session_manager.services.session_manager import SessionManager
+try:
+    from claude_code_session_manager.utils.formatters import (
+        format_session_info,
+        format_success_message,
+        format_error_message,
+    )
+except ImportError:
+    from src.claude_code_session_manager.utils.formatters import (
+        format_session_info,
+        format_success_message,
+        format_error_message,
+    )
 
 
 def main() -> None:

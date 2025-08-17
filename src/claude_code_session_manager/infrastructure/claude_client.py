@@ -1,8 +1,14 @@
 import json
 import subprocess
 
-from src.claude_code_session_manager.config.settings import Settings
-from src.claude_code_session_manager.domain.exceptions import ClaudeClientError
+try:
+    from claude_code_session_manager.config.settings import Settings
+except ImportError:
+    from src.claude_code_session_manager.config.settings import Settings
+try:
+    from claude_code_session_manager.domain.exceptions import ClaudeClientError
+except ImportError:
+    from src.claude_code_session_manager.domain.exceptions import ClaudeClientError
 
 # Type alias for JSON response
 JsonDict = dict[str, str | bool | int | float | None]

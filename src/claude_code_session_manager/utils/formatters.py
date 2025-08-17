@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 
-from src.claude_code_session_manager.domain.models import Session
+try:
+    from claude_code_session_manager.domain.models import Session
+except ImportError:
+    from src.claude_code_session_manager.domain.models import Session
 
 from io import StringIO
 

@@ -1,13 +1,31 @@
 from datetime import datetime, timedelta
 
-from src.claude_code_session_manager.config.settings import Settings
-from src.claude_code_session_manager.domain.exceptions import (
-    SessionNotFoundError,
-    ClaudeClientError,
-)
-from src.claude_code_session_manager.domain.models import Session
-from src.claude_code_session_manager.infrastructure.claude_client import ClaudeClient
-from src.claude_code_session_manager.infrastructure.storage import SessionStorage
+try:
+    from claude_code_session_manager.config.settings import Settings
+except ImportError:
+    from src.claude_code_session_manager.config.settings import Settings
+try:
+    from claude_code_session_manager.domain.exceptions import (
+        SessionNotFoundError,
+        ClaudeClientError,
+    )
+except ImportError:
+    from src.claude_code_session_manager.domain.exceptions import (
+        SessionNotFoundError,
+        ClaudeClientError,
+    )
+try:
+    from claude_code_session_manager.domain.models import Session
+except ImportError:
+    from src.claude_code_session_manager.domain.models import Session
+try:
+    from claude_code_session_manager.infrastructure.claude_client import ClaudeClient
+except ImportError:
+    from src.claude_code_session_manager.infrastructure.claude_client import ClaudeClient
+try:
+    from claude_code_session_manager.infrastructure.storage import SessionStorage
+except ImportError:
+    from src.claude_code_session_manager.infrastructure.storage import SessionStorage
 
 
 class SessionManager:

@@ -16,6 +16,3 @@ claude-sessions = "claude_code_session_manager.__main__:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/claude_code_session_manager"]
-
-[tool.hatch.build.targets.wheel.sources]
-"src" = ""

@@ -4,8 +4,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import override
 
-from src.claude_code_session_manager.domain.exceptions import StorageError
-from src.claude_code_session_manager.domain.models import Session
+try:
+    from claude_code_session_manager.domain.exceptions import StorageError
+except ImportError:
+    from src.claude_code_session_manager.domain.exceptions import StorageError
+try:
+    from claude_code_session_manager.domain.models import Session
+except ImportError:
+    from src.claude_code_session_manager.domain.models import Session
 
 
 class SessionStorage(ABC):
