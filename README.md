@@ -18,11 +18,12 @@ The application follows clean architecture principles with distinct layers:
 
 ```
 src/
-├── domain/          # Core business models and exceptions
-├── infrastructure/  # External dependencies (Claude CLI, file storage)
-├── services/        # Business logic (SessionManager)
-├── config/          # Application settings and configuration
-└── utils/           # Formatting utilities
+└── claude_code_session_manager/
+    ├── domain/          # Core business models and exceptions
+    ├── infrastructure/  # External dependencies (Claude CLI, file storage)
+    ├── services/        # Business logic (SessionManager)
+    ├── config/          # Application settings and configuration
+    └── utils/           # Formatting utilities
 ```
 
 ## Prerequisites
