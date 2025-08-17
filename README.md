@@ -74,6 +74,7 @@ claude-sessions status
 ### Quick Start
 
 **With pipx installation (recommended):**
+
 ```bash
 # Start a new session immediately
 claude-sessions start-now
@@ -86,6 +87,7 @@ claude-sessions start-now -f
 ```
 
 **With development setup:**
+
 ```bash
 # Start a new session immediately
 python -m claude_code_session_manager start-now
@@ -112,11 +114,10 @@ $ claude-sessions start-now
 
 $ claude-sessions status
 📊 Sesiune Claude Pro
-├── 🆔 ID: 12345abc-def6-7890-ghij-klmnopqrstuv
 ├── 📅 Creată: 2024-01-15 14:30:25
 ├── ⏰ Expiră: 2024-01-15 19:30:25
-├── 🕐 Timp rămas: 4h 23m
-└── ✅ Status: Activă
+├── ✅ Status: Activă
+└── 🕐 Timp rămas: 4h 23m
 ```
 
 ## Configuration
