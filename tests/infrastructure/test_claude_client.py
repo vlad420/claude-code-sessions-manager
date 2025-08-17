@@ -35,7 +35,7 @@ class TestClaudeClient(BaseTestCase):
 
         # Verify subprocess was called with correct arguments
         expected_cmd = [
-            "claude",
+            "/opt/homebrew/bin/claude",
             "-p",
             "Hello Claude!",
             "--max-turns",
@@ -68,7 +68,7 @@ class TestClaudeClient(BaseTestCase):
 
         # Verify custom settings are used
         expected_cmd = [
-            "claude",
+            "/opt/homebrew/bin/claude",
             "-p",
             "Test message",
             "--max-turns",
@@ -178,7 +178,7 @@ class TestClaudeClient(BaseTestCase):
 
         self.assertTrue(result)
         mock_run.assert_called_once_with(
-            ["claude", "--help"],
+            ["/opt/homebrew/bin/claude", "--help"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
