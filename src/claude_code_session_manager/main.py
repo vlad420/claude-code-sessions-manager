@@ -1,4 +1,5 @@
 import argparse
+
 try:
     from claude_code_session_manager.config.settings import get_settings
 except ImportError:
@@ -24,7 +25,9 @@ except ImportError:
 try:
     from claude_code_session_manager.infrastructure.storage import create_file_storage
 except ImportError:
-    from src.claude_code_session_manager.infrastructure.storage import create_file_storage
+    from src.claude_code_session_manager.infrastructure.storage import (
+        create_file_storage,
+    )
 try:
     from claude_code_session_manager.services.session_manager import SessionManager
 except ImportError:
@@ -105,8 +108,9 @@ def handle_start_now(session_manager: SessionManager, force: bool = False) -> No
         return
 
     try:
-        _ = session_manager.activate_session()
+        session = session_manager.activate_session()
         print(format_success_message("Sesiune activată cu succes!"))
+        print(format_session_info(session))
     except SessionManagerError as e:
         raise e
 
