@@ -296,9 +296,54 @@ ping anthropic.com
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request
 
+## Automated Scheduling (macOS)
+
+The application includes LaunchAgent integration for automated session management that runs every 5 minutes.
+
+### Installation
+
+```bash
+# Install LaunchAgent for automated scheduling
+./install-scheduler.sh
+
+# Uninstall LaunchAgent
+./uninstall-scheduler.sh
+```
+
+### Manual Setup
+
+If you prefer manual setup:
+
+1. **Copy the template**:
+   ```bash
+   cp com.claude-sessions.scheduler.plist.template com.claude-sessions.scheduler.plist
+   ```
+
+2. **Replace placeholders**:
+   - `{{USER_HOME}}`: Your home directory (e.g., `/Users/yourusername`)
+   - `{{VENV_PATH}}`: Path to your Python virtual environment
+
+3. **Install the LaunchAgent**:
+   ```bash
+   cp com.claude-sessions.scheduler.plist ~/Library/LaunchAgents/
+   launchctl load ~/Library/LaunchAgents/com.claude-sessions.scheduler.plist
+   ```
+
+### Monitoring
+
+```bash
+# Check LaunchAgent status
+launchctl list | grep claude-sessions
+
+# Monitor logs
+tail -f ~/.local/share/claude-sessions/scheduler.out
+
+# View errors
+tail -f ~/.local/share/claude-sessions/scheduler.err
+```
+
 ## Future Enhancements
 
-- 🤖 **LaunchAgent Integration**: Automated session scheduling on macOS
 - 🌐 **Cross-platform Support**: Windows and Linux compatibility
 - 📈 **Usage Analytics**: Session usage statistics and insights
 - 🔔 **Notifications**: Alert system for session expiration
