@@ -187,23 +187,51 @@ python run_tests.py -m test_models
 ```
 claude-code-sessions-manager/
 ├── src/
+│   └── claude_code_session_manager/    # Main package directory
+│       ├── __init__.py
+│       ├── __main__.py                 # Module entry point (python -m)
+│       ├── main.py                     # CLI entry point
+│       ├── config/
+│       │   ├── __init__.py
+│       │   └── settings.py             # Configuration management
+│       ├── domain/
+│       │   ├── __init__.py
+│       │   ├── models.py               # Session model
+│       │   └── exceptions.py           # Custom exceptions
+│       ├── infrastructure/
+│       │   ├── __init__.py
+│       │   ├── claude_client.py        # Claude CLI integration
+│       │   └── storage.py              # File-based session storage
+│       ├── services/
+│       │   ├── __init__.py
+│       │   └── session_manager.py      # Core business logic
+│       └── utils/
+│           ├── __init__.py
+│           └── formatters.py           # Output formatting utilities
+├── tests/                              # Comprehensive test suite
+│   ├── __init__.py
 │   ├── config/
-│   │   └── settings.py          # Configuration management
+│   │   ├── __init__.py
+│   │   └── test_settings.py
 │   ├── domain/
-│   │   ├── models.py            # Session model
-│   │   └── exceptions.py        # Custom exceptions
+│   │   ├── __init__.py
+│   │   ├── test_models.py
+│   │   └── test_exceptions.py
 │   ├── infrastructure/
-│   │   ├── claude_client.py     # Claude CLI integration
-│   │   └── storage.py           # File-based session storage
+│   │   ├── __init__.py
+│   │   ├── test_claude_client.py
+│   │   └── test_storage.py
 │   ├── services/
-│   │   └── session_manager.py   # Core business logic
+│   │   ├── __init__.py
+│   │   └── test_session_manager.py
 │   └── utils/
-│       └── formatters.py        # Output formatting utilities
-├── tests/                       # Comprehensive test suite
-├── main.py                      # CLI entry point
-├── requirements.txt             # Python dependencies
-├── CLAUDE.md                    # Development instructions
-└── README.md                    # This file
+│       ├── __init__.py
+│       └── test_helpers.py
+├── pyproject.toml                      # Modern Python packaging configuration
+├── requirements.txt                    # Python dependencies
+├── run_tests.py                        # Test runner script
+├── CLAUDE.md                           # Development instructions
+└── README.md                           # This file
 ```
 
 ## How It Works
