@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 try:
     from claude_code_session_manager.config.settings import get_settings
@@ -69,9 +70,9 @@ def main() -> None:
             parser.print_help()
 
     except SessionManagerError as e:
-        print(format_error_message(str(e)))
+        print(format_error_message(str(e)), file=sys.stderr)
     except Exception as e:
-        print(format_error_message(f"Eroare neașteptată: {e}"))
+        print(format_error_message(f"Eroare neașteptată: {e}"), file=sys.stderr)
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -102,8 +103,9 @@ def handle_start_now(session_manager: SessionManager, force: bool = False) -> No
     """Handle the start-now command."""
     if not force and session_manager.is_session_active():
         session = session_manager.get_session_info()
+        # TODO: Transformam print-ul intr-o eroare
         print("Există deja o sesiune activă:")
-        print(format_session_info(session))
+        print(format_session_info(session))  # TODO: Eliminăm print-ul
         print("\nFolosește -f/--force pentru a forța o sesiune nouă.")
         return
 

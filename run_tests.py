@@ -26,7 +26,7 @@ def discover_and_run_tests(verbosity: int = 2) -> bool:
     tests_dir = project_root / "tests"
 
     if not tests_dir.exists():
-        print(f"Tests directory not found: {tests_dir}")
+        print(f"Tests directory not found: {tests_dir}", file=sys.stderr)
         return False
 
     # Discover tests
@@ -66,25 +66,25 @@ def discover_and_run_tests(verbosity: int = 2) -> bool:
         if success:
             print("✅ All tests passed!")
         else:
-            print("❌ Some tests failed!")
+            print("❌ Some tests failed!", file=sys.stderr)
 
             # Print failure details
             if result.failures:
-                print("\nFAILURES:")
+                print("\nFAILURES:", file=sys.stderr)
                 for test, traceback in result.failures:
-                    print(f"- {test}")
-                    print(f"  {traceback.split(chr(10))[-2]}")  # Last meaningful line
+                    print(f"- {test}", file=sys.stderr)
+                    print(f"  {traceback.split(chr(10))[-2]}", file=sys.stderr)  # Last meaningful line
 
             if result.errors:
-                print("\nERRORS:")
+                print("\nERRORS:", file=sys.stderr)
                 for test, traceback in result.errors:
-                    print(f"- {test}")
-                    print(f"  {traceback.split(chr(10))[-2]}")  # Last meaningful line
+                    print(f"- {test}", file=sys.stderr)
+                    print(f"  {traceback.split(chr(10))[-2]}", file=sys.stderr)  # Last meaningful line
 
         return success
 
     except Exception as e:
-        print(f"Error running tests: {e}")
+        print(f"Error running tests: {e}", file=sys.stderr)
         return False
 
 
@@ -114,10 +114,10 @@ def run_specific_test_module(module_name: str, verbosity: int = 2) -> bool:
         return len(result.failures) == 0 and len(result.errors) == 0
 
     except ImportError as e:
-        print(f"Could not import test module '{module_name}': {e}")
+        print(f"Could not import test module '{module_name}': {e}", file=sys.stderr)
         return False
     except Exception as e:
-        print(f"Error running test module '{module_name}': {e}")
+        print(f"Error running test module '{module_name}': {e}", file=sys.stderr)
         return False
 
 
