@@ -88,13 +88,13 @@ claude-sessions start-now -f
 **With development setup:**
 ```bash
 # Start a new session immediately
-python main.py start-now
+python -m claude_code_session_manager start-now
 
 # Check current session status
-python main.py status
+python -m claude_code_session_manager status
 
 # Force start a new session (override active session)
-python main.py start-now -f
+python -m claude_code_session_manager start-now -f
 ```
 
 ### Command Reference
