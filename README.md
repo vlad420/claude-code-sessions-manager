@@ -33,13 +33,33 @@ src/
 
 ## Installation
 
+### Method 1: pipx (Recommended)
+
+```bash
+# Install pipx if not already installed
+brew install pipx
+pipx ensurepath   # apoi deschide un shell nou
+
+# Clone and install
+git clone <repository-url>
+cd claude-code-sessions-manager
+pipx install .
+
+# Verify installation
+claude-sessions status
+```
+
+### Method 2: Development Setup
+
 1. **Clone the repository**:
+
    ```bash
    git clone <repository-url>
    cd claude-code-sessions-manager
    ```
 
 2. **Install dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -53,6 +73,19 @@ src/
 
 ### Quick Start
 
+**With pipx installation (recommended):**
+```bash
+# Start a new session immediately
+claude-sessions start-now
+
+# Check current session status
+claude-sessions status
+
+# Force start a new session (override active session)
+claude-sessions start-now -f
+```
+
+**With development setup:**
 ```bash
 # Start a new session immediately
 python main.py start-now
@@ -66,18 +99,18 @@ python main.py start-now -f
 
 ### Command Reference
 
-| Command | Description | Options |
-|---------|-------------|---------|
-| `start-now` | Creates and activates a new Claude session | `-f, --force`: Override existing active session |
-| `status` | Displays current session information and status | None |
+| Command     | Description                                     | Options                                         |
+| ----------- | ----------------------------------------------- | ----------------------------------------------- |
+| `start-now` | Creates and activates a new Claude session      | `-f, --force`: Override existing active session |
+| `status`    | Displays current session information and status | None                                            |
 
 ### Example Output
 
 ```bash
-$ python main.py start-now
+$ claude-sessions start-now
 ✅ Sesiune activată cu succes!
 
-$ python main.py status
+$ claude-sessions status
 📊 Sesiune Claude Pro
 ├── 🆔 ID: 12345abc-def6-7890-ghij-klmnopqrstuv
 ├── 📅 Creată: 2024-01-15 14:30:25
@@ -90,13 +123,13 @@ $ python main.py status
 
 The application uses environment variables for configuration with sensible defaults:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SESSION_DURATION_HOURS` | `5` | Session window duration in hours |
-| `SESSION_FILE_PATH` | `"session.json"` | Path to session storage file |
-| `CLAUDE_TIMEOUT_SECONDS` | `10` | Claude CLI command timeout |
-| `CLAUDE_MAX_TURNS` | `1` | Maximum conversation turns |
-| `CLAUDE_OUTPUT_FORMAT` | `"json"` | Claude CLI output format |
+| Variable                 | Default          | Description                      |
+| ------------------------ | ---------------- | -------------------------------- |
+| `SESSION_DURATION_HOURS` | `5`              | Session window duration in hours |
+| `SESSION_FILE_PATH`      | `"session.json"` | Path to session storage file     |
+| `CLAUDE_TIMEOUT_SECONDS` | `10`             | Claude CLI command timeout       |
+| `CLAUDE_MAX_TURNS`       | `1`              | Maximum conversation turns       |
+| `CLAUDE_OUTPUT_FORMAT`   | `"json"`         | Claude CLI output format         |
 
 ### Setting Environment Variables
 
@@ -199,6 +232,7 @@ graph LR
 ### Common Issues
 
 **Claude CLI not found**:
+
 ```bash
 # Verify Claude CLI installation
 which claude
@@ -206,6 +240,7 @@ which claude
 ```
 
 **Permission denied on session file**:
+
 ```bash
 # Check file permissions
 ls -la session.json
@@ -214,6 +249,7 @@ chmod 644 session.json
 ```
 
 **Session not activating**:
+
 ```bash
 # Check Claude CLI status
 claude --help
@@ -245,6 +281,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For issues and questions:
+
 - 🐛 **Bug Reports**: Open an issue on GitHub
 - 💡 **Feature Requests**: Create a feature request issue
 - 📧 **General Questions**: Use GitHub Discussions

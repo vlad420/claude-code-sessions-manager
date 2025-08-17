@@ -36,6 +36,15 @@ python run_tests.py -m test_models  # Run specific test module
 pip install -r requirements.txt  # Install dependencies (rich for formatting)
 ```
 
+### Installation (Alternative)
+```bash
+# Install with pipx (recommended)
+brew install pipx
+pipx ensurepath   # apoi deschide un shell nou
+pipx install .
+# After installation, use: claude-sessions instead of python main.py
+```
+
 ## Architecture
 
 The codebase follows a clean architecture pattern with clear separation of concerns:
