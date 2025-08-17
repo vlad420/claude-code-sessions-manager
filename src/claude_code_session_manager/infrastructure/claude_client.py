@@ -23,7 +23,7 @@ class ClaudeClient:
     def send_message(self, message: str) -> JsonDict:
         """Send a message to Claude CLI and return the response."""
         cmd = [
-            "claude",
+            "/opt/homebrew/bin/claude",
             "-p",
             message,
             "--max-turns",
@@ -78,7 +78,7 @@ class ClaudeClient:
         """Test if Claude CLI is available and working without consuming usage."""
         try:
             result = subprocess.run(
-                ["claude", "--help"],
+                ["/opt/homebrew/bin/claude", "--help"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
