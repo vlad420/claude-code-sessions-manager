@@ -342,6 +342,40 @@ tail -f ~/.local/share/claude-sessions/scheduler.out
 tail -f ~/.local/share/claude-sessions/scheduler.err
 ```
 
+### macOS Privacy Permissions
+
+**Important**: When using LaunchAgent automation on macOS, you may encounter permission prompts that prevent the scheduler from running automatically. This happens because Python needs permission to execute the Claude CLI.
+
+#### Solution: Grant Full Disk Access
+
+1. Open **System Settings** > **Privacy & Security** > **Full Disk Access**
+2. Click the **+** button to add applications
+3. Navigate to your Python executable (usually `/usr/bin/python3` or your virtual environment's Python)
+4. Add **Python** to the Full Disk Access list
+5. Optionally, also add **Terminal** for additional compatibility
+
+#### Alternative: Automation Permissions
+
+If Full Disk Access seems too broad, you can try the more specific approach:
+
+1. Open **System Settings** > **Privacy & Security** > **Automation**
+2. Look for **Python** or **Terminal** in the list
+3. Enable permissions for **Claude CLI** or other relevant applications
+
+#### Verification
+
+After granting permissions, test the LaunchAgent:
+
+```bash
+# Manually trigger the LaunchAgent to test
+launchctl start com.claude-sessions.scheduler
+
+# Check if it ran successfully
+tail ~/.local/share/claude-sessions/scheduler.out
+```
+
+**Note**: This permission setup is required only once. The LaunchAgent will then run automatically every 5 minutes without further prompts.
+
 ## Future Enhancements
 
 - 🌐 **Cross-platform Support**: Windows and Linux compatibility
