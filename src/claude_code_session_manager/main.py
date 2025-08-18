@@ -103,9 +103,7 @@ def handle_start_now(session_manager: SessionManager, force: bool = False) -> No
     """Handle the start-now command."""
     if not force and session_manager.is_session_active():
         session = session_manager.get_session_info()
-        # TODO: Transformam print-ul intr-o eroare
-        print("Există deja o sesiune activă:")
-        print(format_session_info(session))  # TODO: Eliminăm print-ul
+        print(format_error_message("Există deja o sesiune activă:"), file=sys.stderr)
         print("\nFolosește -f/--force pentru a forța o sesiune nouă.")
         return
 
